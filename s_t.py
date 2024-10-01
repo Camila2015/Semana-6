@@ -9,11 +9,11 @@ import glob
 from gtts import gTTS
 from googletrans import Translator
 
-# Estilos personalizados con CSS
+# Estilos personalizados con CSS (usando los colores Pantone)
 st.markdown("""
     <style>
     .stButton button {
-        background-color: #4CAF50; 
+        background-color: #FF6F61; /* Living Coral */
         color: white;
         border-radius: 12px;
         font-size: 16px;
@@ -23,28 +23,28 @@ st.markdown("""
     }
     
     .stButton button:hover {
-        background-color: #45a049;
+        background-color: #F88379; /* Hover Coral (slightly lighter) */
     }
 
     .header {
         font-family: 'Arial', sans-serif;
-        color: #3a3a3a;
+        color: #FF6F61; /* Living Coral */
         text-align: center;
     }
     
     .subheader {
-        color: #6c757d;
+        color: #F4C5D5; /* Sea Pink */
         text-align: center;
         margin-bottom: 30px;
     }
 
     .sidebar .sidebar-content {
-        background-color: #f8f9fa;
+        background-color: #98DDDE; /* Limpet Shell */
         padding: 10px;
     }
 
     .stAudio {
-        background-color: #f1f1f1;
+        background-color: #FFE77A; /* Vibrant Yellow */
         border-radius: 10px;
         padding: 10px;
     }
@@ -231,8 +231,6 @@ if result:
 
     # Eliminar archivos después de 7 días
     remove_files(7)
-
-
 
         
     
