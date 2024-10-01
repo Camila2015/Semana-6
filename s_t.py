@@ -9,11 +9,10 @@ import glob
 from gtts import gTTS
 from googletrans import Translator
 
-# Estilos personalizados con CSS (usando los colores Pantone)
 st.markdown("""
     <style>
     .stButton button {
-        background-color: #FF6F61; /* Living Coral */
+        background-color: #FF6F61;
         color: white;
         border-radius: 12px;
         font-size: 16px;
@@ -23,28 +22,28 @@ st.markdown("""
     }
     
     .stButton button:hover {
-        background-color: #F88379; /* Hover Coral (slightly lighter) */
+        background-color: #F88379;
     }
 
     .header {
         font-family: 'Arial', sans-serif;
-        color: #FF6F61; /* Living Coral */
+        color: #FF6F61;
         text-align: center;
     }
     
     .subheader {
-        color: #F4C5D5; /* Sea Pink */
+        color: #F4C5D5;
         text-align: center;
         margin-bottom: 30px;
     }
 
     .sidebar .sidebar-content {
-        background-color: #98DDDE; /* Limpet Shell */
+        background-color: #98DDDE;
         padding: 10px;
     }
 
     .stAudio {
-        background-color: #FFE77A; /* Vibrant Yellow */
+        background-color: #FFE77A;
         border-radius: 10px;
         padding: 10px;
     }
@@ -55,7 +54,7 @@ st.markdown("""
         border-top: 4px solid #3498db;
         width: 30px;
         height: 30px;
-        -webkit-animation: spin 1s linear infinite; /* Safari */
+        -webkit-animation: spin 1s linear infinite;
         animation: spin 1s linear infinite;
         margin: 20px auto;
     }
@@ -73,11 +72,9 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# Título y subtítulo
 st.markdown("<h1 class='header'>TRADUCTOR</h1>", unsafe_allow_html=True)
 st.markdown("<h3 class='subheader'>Escucha lo que quieres traducir.</h3>", unsafe_allow_html=True)
 
-# Imagen principal
 image = Image.open('OIG7.jpg')
 st.image(image, width=300)
 
@@ -85,13 +82,10 @@ with st.sidebar:
     st.subheader("Traductor")
     st.write("Presiona el botón, cuando escuches la señal, habla lo que quieres traducir y luego selecciona la configuración de lenguaje que necesites.")
 
-# Indicaciones para el usuario
 st.write("Toca el botón y habla lo que quieres traducir:")
 
-# Botón de reconocimiento de voz
 stt_button = Button(label="🎤 Escuchar", width=300, height=50)
 
-# JavaScript para reconocimiento de voz
 stt_button.js_on_event("button_click", CustomJS(code="""
     var recognition = new webkitSpeechRecognition();
     recognition.continuous = true;
@@ -111,7 +105,6 @@ stt_button.js_on_event("button_click", CustomJS(code="""
     recognition.start();
     """))
 
-# Evento para escuchar la voz
 result = streamlit_bokeh_events(
     stt_button,
     events="GET_TEXT",
@@ -121,7 +114,6 @@ result = streamlit_bokeh_events(
     debounce_time=0
 )
 
-# Procesar la traducción
 if result:
     if "GET_TEXT" in result:
         st.write(result.get("GET_TEXT"))
@@ -136,13 +128,11 @@ if result:
     
     text = str(result.get("GET_TEXT"))
 
-    # Lenguajes de entrada y salida
     in_lang = st.selectbox(
         "Selecciona el lenguaje de Entrada",
         ("Inglés", "Español", "Italiano", "Coreano", "Mandarín", "Japonés"),
     )
 
-    # Asignación del código de idioma
     lang_dict = {
         "Inglés": "en",
         "Español": "es",
@@ -160,7 +150,6 @@ if result:
     )
     output_language = lang_dict[out_lang]
     
-    # Selección del acento inglés
     english_accent = st.selectbox(
         "Selecciona el acento",
         (
@@ -188,7 +177,6 @@ if result:
 
     tld = tld_dict[english_accent]
 
-    # Función de traducción
     def text_to_speech(input_language, output_language, text, tld):
         translation = translator.translate(text, src=input_language, dest=output_language)
         trans_text = translation.text
@@ -202,23 +190,19 @@ if result:
     
     display_output_text = st.checkbox("Mostrar el texto")
 
-    # Botón para convertir a audio
     if st.button("🎧 Convertir a Audio"):
         with st.spinner('Procesando...'):
             result, output_text = text_to_speech(input_language, output_language, text, tld)
             audio_file = open(f"temp/{result}.mp3", "rb")
             audio_bytes = audio_file.read()
 
-        # Mostrar el audio
         st.markdown(f"## Tu audio:")
         st.audio(audio_bytes, format="audio/mp3", start_time=0)
 
-        # Mostrar el texto traducido si es seleccionado
         if display_output_text:
             st.markdown(f"## Texto de salida:")
             st.write(f" {output_text}")
 
-    # Función para eliminar archivos antiguos
     def remove_files(n):
         mp3_files = glob.glob("temp/*mp3")
         if len(mp3_files) != 0:
@@ -229,10 +213,4 @@ if result:
                     os.remove(f)
                     print("Deleted ", f)
 
-    # Eliminar archivos después de 7 días
     remove_files(7)
-
-        
-    
-
-
